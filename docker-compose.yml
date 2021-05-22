@@ -29,6 +29,7 @@ services:
             - MYSQL_DATABASE=milk
         volumes:
             - ./data:/data
+            - ./database/sql:/docker-entrypoint-initdb.d
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
             timeout: 5s
