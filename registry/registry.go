@@ -2,6 +2,7 @@ package registry
 
 import (
 	"github.com/gba-3/milk/registry/container"
+	"github.com/jmoiron/sqlx"
 )
 
 type registry struct {
@@ -14,11 +15,11 @@ func NewRegistry() *registry {
 	}
 }
 
-func (r *registry) GetAppHandler() *AppHandler {
+func (r *registry) GetAppHandler(db *sqlx.DB) *AppHandler {
 	handler := NewAppHandler(
 		r.c.GetUserHandler(
 			r.c.GetUserUsecase(
-				r.c.GetUserRepository(),
+				r.c.GetUserRepository(db),
 			),
 		),
 	)

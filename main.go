@@ -1,17 +1,23 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gba-3/milk/handler"
+	"github.com/gba-3/milk/infrastructure"
 	"github.com/gba-3/milk/registry"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
 
 func main() {
+	db, err := infrastructure.BootMySQL()
+	if err != nil {
+		log.Fatal(err)
+	}
 	r := registry.NewRegistry()
-	ah := r.GetAppHandler()
+	ah := r.GetAppHandler(db)
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 	router.Route("/api", func(api chi.Router) {
