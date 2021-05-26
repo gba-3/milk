@@ -14,6 +14,7 @@ type userRepository struct {
 
 type UserRepository interface {
 	GetUsers() []entity.User
+	CreateUser(name string, email string, password string) error
 }
 
 func NewUserRepository(db *sqlx.DB) UserRepository {
@@ -48,4 +49,9 @@ func (ur *userRepository) GetUsers() []entity.User {
 		log.Fatal(err)
 	}
 	return users
+}
+
+func (ur *userRepository) CreateUser(name string, email string, password string) error {
+	query := "INSERT INTO users (name, email, password) VALUES (?, ?, ?)"
+	return infrastructure.NewMySQL(ur.db).Exec(query, name, email, password)
 }
