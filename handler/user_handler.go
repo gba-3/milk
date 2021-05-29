@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 
@@ -29,5 +30,15 @@ func (uh UserHandler) Signup(w http.ResponseWriter, r *http.Request) (int, inter
 		return http.StatusBadRequest, nil, err
 	}
 	if json.Unmarshal(body, &reqBody); err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+	if reqBody.Name == "" {
+		return http.StatusBadRequest, nil, errors.New("Name is empty in request body.")
+	}
+	if reqBody.Email == "" {
+		return http.StatusBadRequest, nil, errors.New("Email is empty in request body.")
+	}
+	if reqBody.Password == "" {
+		return http.StatusBadRequest, nil, errors.New("Password is empty in request body.")
 	}
 }
