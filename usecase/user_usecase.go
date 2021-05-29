@@ -11,6 +11,7 @@ type userUsecase struct {
 
 type UserUsecase interface {
 	GetUsers() []entity.User
+	CreateUser(name, email, password string) error
 }
 
 func NewUserUsecase(ur repository.UserRepository) UserUsecase {
@@ -19,4 +20,8 @@ func NewUserUsecase(ur repository.UserRepository) UserUsecase {
 
 func (uu *userUsecase) GetUsers() []entity.User {
 	return uu.ur.GetUsers()
+}
+
+func (uu *userUsecase) CreateUser(name, email, password string) error {
+	return uu.ur.CreateUser(name, email, password)
 }
