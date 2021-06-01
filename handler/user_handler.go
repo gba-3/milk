@@ -41,4 +41,9 @@ func (uh UserHandler) Signup(w http.ResponseWriter, r *http.Request) (int, inter
 	if reqBody.Password == "" {
 		return http.StatusBadRequest, nil, errors.New("Password is empty in request body.")
 	}
+	err = uh.uu.CreateUser(reqBody.Name, reqBody.Email, reqBody.Password)
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+	return http.StatusOK, "Create user is successed.", nil
 }

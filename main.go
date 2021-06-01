@@ -30,6 +30,9 @@ func main() {
 			users.Get("/", handler.JsonHandler(
 				ah.UserHandler.GetUsers,
 			).ServeHTTP)
+			users.Post("/signup", handler.JsonHandler(
+				ah.UserHandler.Signup,
+			).ServeHTTP)
 		})
 	})
 
