@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"github.com/gba-3/milk/auth"
 	"io"
 	"net/http"
 
@@ -45,5 +46,12 @@ func (uh UserHandler) Signup(w http.ResponseWriter, r *http.Request) (int, inter
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
-	return http.StatusOK, "Create user is successed.", nil
+	token, err := auth.CreateToken(reqBody.Email)
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+	res := map[string]string{
+		"token": token,
+	}
+	return http.StatusOK, res, nil
 }

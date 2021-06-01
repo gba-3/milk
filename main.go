@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gba-3/milk/auth"
 	"log"
 	"net/http"
 
@@ -27,9 +28,9 @@ func main() {
 			})
 		})
 		api.Route("/users", func(users chi.Router) {
-			users.Get("/", handler.JsonHandler(
-				ah.UserHandler.GetUsers,
-			).ServeHTTP)
+			users.Get("/", auth.JwtMiddleware.Handler(
+				handler.JsonHandler(ah.UserHandler.GetUsers)).ServeHTTP,
+			)
 			users.Post("/signup", handler.JsonHandler(
 				ah.UserHandler.Signup,
 			).ServeHTTP)
