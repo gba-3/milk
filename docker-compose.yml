@@ -19,7 +19,7 @@ services:
             - ./:/app
     mysql:
         image: mysql:5.7
-        container_name: mysql
+        container_name: milk_mysql
         command: mysqld --user=root
         ports:
             - 3306:3306
