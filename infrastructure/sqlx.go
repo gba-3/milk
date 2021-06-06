@@ -15,7 +15,17 @@ func (m *MySQL) Select(dest interface{}, query string, args ...interface{}) erro
 }
 
 func (m *MySQL) Exec(query string, args ...interface{}) error {
-	tx := m.DB.MustBegin()
-	tx.MustExec(query, args...)
-	return tx.Commit()
+	tx, err := m.DB.Begin()
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec(query, args...)
+	if err != nil {
+		return tx.Rollback()
+	}
+	err = tx.Commit()
+	if err != nil {
+		return tx.Rollback()
+	}
+	return err
 }
