@@ -9,6 +9,7 @@ import (
 
 	"github.com/gba-3/milk/domain/entity"
 	"github.com/gba-3/milk/usecase"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserHandler struct {
@@ -42,14 +43,23 @@ func (uh UserHandler) Signup(w http.ResponseWriter, r *http.Request) (int, inter
 	if reqBody.Password == "" {
 		return http.StatusBadRequest, nil, errors.New("Password is empty in request body.")
 	}
-	err = uh.uu.CreateUser(reqBody.Name, reqBody.Email, reqBody.Password)
+
+	// パスワードハッシュ化
+	hash, err := bcrypt.GenerateFromPassword([]byte(reqBody.Password), 10)
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
+
+	err = uh.uu.CreateUser(reqBody.Name, reqBody.Email, string(hash))
+	if err != nil {
+		return http.StatusBadRequest, nil, err
+	}
+
 	token, err := auth.CreateToken(reqBody.Email)
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
+
 	res := map[string]string{
 		"token": token,
 	}
