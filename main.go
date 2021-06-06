@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gba-3/milk/auth"
+	"github.com/gba-3/milk/logger"
 	"log"
 	"net/http"
 
@@ -23,19 +24,18 @@ func main() {
 	router.Use(middleware.Logger)
 	router.Route("/api", func(api chi.Router) {
 		api.Route("/signup", func(signup chi.Router) {
-			signup.Post("/", func(rw http.ResponseWriter, r *http.Request) {
-				rw.Write([]byte("Signup"))
-			})
+			signup.Post("/", handler.JsonHandler(
+				ah.UserHandler.Signup,
+			).ServeHTTP)
 		})
 		api.Route("/users", func(users chi.Router) {
 			users.Get("/", auth.JwtMiddleware.Handler(
 				handler.JsonHandler(ah.UserHandler.GetUsers)).ServeHTTP,
 			)
-			users.Post("/signup", handler.JsonHandler(
-				ah.UserHandler.Signup,
-			).ServeHTTP)
 		})
 	})
 
-	http.ListenAndServe(":9090", router)
+	if err = http.ListenAndServe(":9090", router); err != nil {
+		logger.Log.Error(err.Error())
+	}
 }
