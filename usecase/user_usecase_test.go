@@ -32,10 +32,18 @@ func (mur *mockUserRepository) GetUsers() []entity.User {
 	return users
 }
 
+func (mur *mockUserRepository) CreateUser(name string, email string, password string) error {
+	return nil
+}
+
 type mockEmptyUserRepository struct{}
 
 func (meur mockEmptyUserRepository) GetUsers() []entity.User {
 	return []entity.User{}
+}
+
+func (meur *mockEmptyUserRepository) CreateUser(name string, email string, password string) error {
+	return nil
 }
 
 func TestSuccessGetUsers(t *testing.T) {
