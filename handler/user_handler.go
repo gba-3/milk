@@ -3,9 +3,10 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"github.com/gba-3/milk/auth"
-	"io"
+	"io/ioutil"
 	"net/http"
+
+	"github.com/gba-3/milk/auth"
 
 	"github.com/gba-3/milk/domain/entity"
 	"github.com/gba-3/milk/usecase"
@@ -27,11 +28,11 @@ func (uh UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) (int, int
 
 func (uh UserHandler) Signup(w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	var reqBody entity.User
-	body, err := io.ReadAll(r.Body)
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return http.StatusBadRequest, nil, err
 	}
-	if json.Unmarshal(body, &reqBody); err != nil {
+	if err := json.Unmarshal(body, &reqBody); err != nil {
 		return http.StatusBadRequest, nil, err
 	}
 	if reqBody.Name == "" {

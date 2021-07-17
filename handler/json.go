@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+
+	"github.com/gba-3/milk/logger"
 )
 
 type JsonHandler func(w http.ResponseWriter, r *http.Request) (int, interface{}, error)
@@ -25,5 +27,7 @@ func responseJson(w http.ResponseWriter, status int, payload interface{}) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	w.Write(buf.Bytes())
+	if _, err := w.Write(buf.Bytes()); err != nil {
+		logger.Log.Error(err.Error())
+	}
 }

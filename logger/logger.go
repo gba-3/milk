@@ -26,6 +26,8 @@ func NewLogger() *zap.Logger {
 	if err != nil {
 		return zap.NewExample()
 	}
-	defer log.Sync()
+	if err := log.Sync(); err != nil {
+		return zap.NewExample()
+	}
 	return log
 }
