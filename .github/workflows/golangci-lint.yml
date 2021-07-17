@@ -20,4 +20,5 @@ jobs:
       - name: golangci-test
         shell: bash
         run: |
+          docker-compose up -d
           docker-compose exec appserver go test ./...
