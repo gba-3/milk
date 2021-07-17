@@ -21,6 +21,7 @@ services:
         image: mysql:5.7
         container_name: milk_mysql
         command: mysqld --user=root
+        tty: true
         ports:
             - 3306:3306
         environment:
