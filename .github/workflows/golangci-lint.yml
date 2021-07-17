@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: golangci-lint
+      - name: golangci-test
+        shell: bash
         run: |
           docker-compose exec appserver go test ./...
