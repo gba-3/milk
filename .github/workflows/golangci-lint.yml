@@ -1,7 +1,5 @@
 name: golangci-lint
-on:
-  push:
-    branches: [ feature/create_users_api ]
+on: ["push"]
 jobs:
   golangci:
     name: lint
