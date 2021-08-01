@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/gba-3/milk/auth"
-	"github.com/gba-3/milk/logger"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/gba-3/milk/auth"
+	"github.com/gba-3/milk/logger"
 
 	"github.com/gba-3/milk/handler"
 	"github.com/gba-3/milk/infrastructure"
@@ -12,6 +14,11 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
+
+func init() {
+	level := os.Getenv("LOGLEVEL")
+	logger.SetupLogger(level)
+}
 
 func main() {
 	db, err := infrastructure.BootMySQL()

@@ -13,6 +13,7 @@ services:
             - MYSQL_PORT=3306
             - MYSQL_DATABASE=milk
             - SIGNINKEY=milk
+            - LOGLEVEL=debug
         ports:
             - 9090:9090
         volumes:

@@ -1,5 +1,5 @@
 FROM golang:1.16.0 as builder
 
-RUN apt update && apt upgrade -y
+RUN apt update && apt upgrade -y && mkdir -p /var/log/ap
 
 WORKDIR /app

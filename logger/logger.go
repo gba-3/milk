@@ -1,33 +1,39 @@
 package logger
 
 import (
+	"log"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
-var Log = NewLogger()
+var Log *zap.Logger
 
-func NewLogger() *zap.Logger {
-	logConfig := zap.Config{
-		OutputPaths: []string{"./ap.log"},
-		Level:       zap.NewAtomicLevelAt(zapcore.DebugLevel),
-		Encoding:    "json",
-		EncoderConfig: zapcore.EncoderConfig{
-			LevelKey:     "level",
-			TimeKey:      "time",
-			MessageKey:   "msg",
-			CallerKey:    "caller",
-			EncodeTime:   zapcore.ISO8601TimeEncoder,
-			EncodeLevel:  zapcore.LowercaseLevelEncoder,
-			EncodeCaller: zapcore.ShortCallerEncoder,
-		},
-	}
-	log, err := logConfig.Build()
+var loggerConf = zap.Config{
+	OutputPaths: []string{"/var/log/ap/ap.log"},
+	Level:       zap.NewAtomicLevelAt(zapcore.DebugLevel),
+	Encoding:    "json",
+	EncoderConfig: zapcore.EncoderConfig{
+		LevelKey:     "level",
+		TimeKey:      "time",
+		MessageKey:   "msg",
+		CallerKey:    "caller",
+		EncodeTime:   zapcore.ISO8601TimeEncoder,
+		EncodeLevel:  zapcore.LowercaseLevelEncoder,
+		EncodeCaller: zapcore.ShortCallerEncoder,
+	},
+}
+
+func SetupLogger(level string) {
+	l, err := NewLogger(level)
 	if err != nil {
-		return zap.NewExample()
+		log.Println(err)
 	}
-	if err := log.Sync(); err != nil {
-		return zap.NewExample()
-	}
-	return log
+	Log = l
+}
+
+func NewLogger(level string) (*zap.Logger, error) {
+	conf := loggerConf
+	conf.Level = zap.NewAtomicLevelAt(convertLevel(level))
+	return conf.Build()
 }
